@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './styles.css'; // Import the CSS file
 
 const EmployeeCrud = () => {
   const [data, setData] = useState([]);
@@ -6,9 +7,16 @@ const EmployeeCrud = () => {
   const [editIndex, setEditIndex] = useState(null);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    console.log(e)
-    
+    const { name, value } = e.target;
+
+    // Only allow numeric input for age and salary
+    if (name === "age" || name === "salary") {
+      if (/^\d*$/.test(value)) { // Ensure only digits are entered
+        setForm({ ...form, [name]: value });
+      }
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -34,35 +42,76 @@ const EmployeeCrud = () => {
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-xl">
-      <h2 className="text-xl font-bold mb-4">CRUD App</h2>
-      <form onSubmit={handleSubmit} className="mb-4 space-y-2">
-        <input type="text" name="name" placeholder="Name" value={form.name} onChange={handleChange} className="w-full p-2 border rounded" required />
-        <input type="number" name="age" placeholder="Age" value={form.age} onChange={handleChange} className="w-full p-2 border rounded" required />
-        <input type="number" name="salary" placeholder="Salary" value={form.salary} onChange={handleChange} className="w-full p-2 border rounded" required />
-        <input type="text" name="domain" placeholder="Domain" value={form.domain} onChange={handleChange} className="w-full p-2 border rounded" required />
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">{editIndex !== null ? "Update" : "Add"}</button>
+    <div className="container">
+      <h2>CRUD App</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text" // Change input type to text for age
+          name="age"
+          placeholder="Age"
+          value={form.age}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text" // Change input type to text for salary
+          name="salary"
+          placeholder="Salary"
+          value={form.salary}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="domain"
+          placeholder="Domain"
+          value={form.domain}
+          onChange={handleChange}
+          required
+        />
+        <button type="submit">
+          {editIndex !== null ? "Update" : "Add"}
+        </button>
       </form>
-      <table className="w-full border-collapse border border-gray-300">
+
+      <table>
         <thead>
           <tr>
-            <th className="border p-2">Name</th>
-            <th className="border p-2">Age</th>
-            <th className="border p-2">Salary</th>
-            <th className="border p-2">Domain</th>
-            <th className="border p-2">Actions</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Salary</th>
+            <th>Domain</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <tr key={index} className="text-center border">
-              <td className="border p-2">{item.name}</td>
-              <td className="border p-2">{item.age}</td>
-              <td className="border p-2">{item.salary}</td>
-              <td className="border p-2">{item.domain}</td>
-              <td className="border p-2">
-                <button onClick={() => handleEdit(index)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Edit</button>
-                <button onClick={() => handleDelete(index)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+            <tr key={index}>
+              <td>{item.name}</td>
+              <td>{item.age}</td>
+              <td>{item.salary}</td>
+              <td>{item.domain}</td>
+              <td>
+                <button
+                  onClick={() => handleEdit(index)}
+                  className="bg-yellow-500"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(index)}
+                  className="bg-red-500"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
